@@ -1,0 +1,19 @@
+{
+  "name": "SoloFit — The System",
+  "short_name": "SoloFit",
+  "description": "Solo Leveling inspired hunter fitness dashboard. Works offline after install.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

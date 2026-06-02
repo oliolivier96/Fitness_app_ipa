@@ -1,0 +1,16 @@
+node_modules/
+www/
+cap-ios.tgz
+cli-assets.tgz
+package/
+
+# iOS / Xcode
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
+*.xcuserstate
+*.xcuserdata
+
+# OS
+.DS_Store
+Thumbs.db

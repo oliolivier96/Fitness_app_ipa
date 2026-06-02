@@ -1,0 +1,14 @@
+# Deploy the project root (not www/) — SoloFit PWA
+[build]
+  publish = "."
+  command = "echo 'Static PWA — no build step'"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"

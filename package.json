@@ -1,0 +1,22 @@
+{
+  "name": "the-system-fitness-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Solo Leveling inspired fitness PWA — offline on iPhone via Add to Home Screen.",
+  "scripts": {
+    "build:web": "node prepare-web.mjs",
+    "serve": "npx --yes serve . -l 3000",
+    "cap:add:ios": "npx cap add ios",
+    "cap:sync": "npm run build:web && npx cap sync ios",
+    "cap:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/local-notifications": "^7.0.6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "typescript": "^6.0.2"
+  }
+}

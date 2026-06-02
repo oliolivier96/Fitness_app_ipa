@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="Hunter fitness dashboard — works offline after Add to Home Screen." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SoloFit" />
+    <title>SoloFit</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scanline-overlay"></div>
+    <div id="hudParticles" class="hud-particles" aria-hidden="true"></div>
+    <p id="offlineBanner" class="offline-banner hidden" role="status">Offline — The System runs from your device.</p>
+    <div id="installHint" class="install-hint hidden" role="region" aria-label="Install SoloFit">
+      <div class="install-hint__inner panel">
+        <p class="label">INSTALL</p>
+        <p class="install-hint__text">
+          For offline use on iPhone: tap <strong>Share</strong> → <strong>Add to Home Screen</strong>, then open SoloFit from your home screen.
+        </p>
+        <button type="button" id="installHintDismiss" class="btn small secondary">Got it</button>
+      </div>
+    </div>
+    <div class="container">
+      <header class="top-bar panel">
+        <div>
+          <p class="label">THE SYSTEM</p>
+          <h1>Hunter Progress Dashboard</h1>
+        </div>
+        <button id="notifyBtn" class="btn secondary">Enable Alerts</button>
+      </header>
+
+      <p id="swipeHint" class="swipe-hint hidden">Swipe left or right to switch pages — or use the bar below.</p>
+
+      <p id="dailyMotivation" class="daily-motivation" aria-live="polite"></p>
+
+      <section id="profileSetup" class="panel setup-panel">
+        <div id="setupStepName" class="setup-step">
+          <h2>Welcome, Hunter</h2>
+          <p class="muted">Enter your name to link with The System.</p>
+          <div class="form-row">
+            <label for="playerName">Name</label>
+            <input id="playerName" type="text" placeholder="Enter your hunter name" maxlength="24" />
+          </div>
+          <button
+            id="setupNextNameBtn"
+            type="button"
+            class="btn"
+            data-setup-action="next-name"
+            onclick="window.SoloFit && window.SoloFit.setupAction('next-name')"
+          >
+            Next
+          </button>
+        </div>
+
+        <div id="setupStepWorkout" class="setup-step hidden">
+          <h2>Choose your workout</h2>
+          <p class="muted">Select the daily quest exercises you will train with.</p>
+          <div class="workout-choice-list">
+            <label class="workout-choice">
+              <input type="radio" name="workoutMode" value="classic" checked />
+              <span class="workout-choice__body">
+                <strong>Classic Solo Leveling workout</strong>
+                <span class="muted">100 push-ups, 100 sit-ups, 100 squats</span>
+              </span>
+            </label>
+            <label class="workout-choice">
+              <input type="radio" name="workoutMode" value="recommended" />
+              <span class="workout-choice__body">
+                <strong>Recommended workout</strong>
+                <span class="muted">Decline push-ups, inverted rows, Bulgarian split squats</span>
+              </span>
+            </label>
+          </div>
+          <div class="setup-actions">
+            <button
+              id="setupBackWorkoutBtn"
+              type="button"
+              class="btn secondary"
+              data-setup-action="back-workout"
+              onclick="window.SoloFit && window.SoloFit.setupAction('back-workout')"
+            >
+              Back
+            </button>
+            <button
+              id="setupNextWorkoutBtn"
+              type="button"
+              class="btn"
+              data-setup-action="next-workout"
+              onclick="window.SoloFit && window.SoloFit.setupAction('next-workout')"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <div id="setupStepEval" class="setup-step hidden">
+          <h2>Baseline evaluation</h2>
+          <p id="setupEvalIntro" class="muted setup-eval-intro"></p>
+          <div class="form-row">
+            <label id="initPushLabel" for="initPushups">Max push-ups (1 set)</label>
+            <input id="initPushups" type="number" min="0" step="1" placeholder="e.g. 40" />
+          </div>
+          <div class="form-row">
+            <label id="initSitLabel" for="initSitups">Max sit-ups (1 set)</label>
+            <input id="initSitups" type="number" min="0" step="1" placeholder="e.g. 35" />
+          </div>
+          <div class="form-row">
+            <label id="initSquatLabel" for="initSquats">Max squats (1 set)</label>
+            <input id="initSquats" type="number" min="0" step="1" placeholder="e.g. 50" />
+          </div>
+          <div class="setup-actions">
+            <button
+              id="setupBackEvalBtn"
+              type="button"
+              class="btn secondary"
+              data-setup-action="back-eval"
+              onclick="window.SoloFit && window.SoloFit.setupAction('back-eval')"
+            >
+              Back
+            </button>
+            <button id="createProfileBtn" type="button" class="btn">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <main id="appMain" class="hidden swipe-root" tabindex="-1">
+        <section id="systemTab" class="grid tab-panel">
+          <article class="panel profile-panel">
+            <p class="label">PLAYER</p>
+            <h2 id="playerHeader">-</h2>
+            <p id="playerTitleLine" class="player-title-line hidden" aria-live="polite"></p>
+            <div id="titleEquipRow" class="title-equip-row hidden">
+              <label class="label title-equip-label" for="titleSelect">Title</label>
+              <select id="titleSelect" class="title-select"></select>
+            </div>
+            <div class="meta-row">
+              <span id="levelText">Level 1</span>
+              <span id="rankText">Rank E</span>
+              <span id="streakText">Streak: 0</span>
+            </div>
+            <div class="xp-wrap">
+              <div class="xp-bar">
+                <div id="xpFill" class="xp-fill"></div>
+              </div>
+              <p id="xpText">XP 0 / 100</p>
+            </div>
+            <div class="stats-grid">
+              <div class="stat"><span>STR</span><strong id="statStrength">1</strong></div>
+              <div class="stat"><span>END</span><strong id="statEndurance">1</strong></div>
+              <div class="stat"><span>SPD</span><strong id="statSpeed">1</strong></div>
+              <div class="stat"><span>DSP</span><strong id="statDiscipline">1</strong></div>
+            </div>
+            <div id="rankEvalBlock" class="rank-eval-block hidden">
+              <p id="rankEvalHint" class="muted rank-eval-hint"></p>
+              <p id="rankEvalLevelWarn" class="rank-eval-level-warn warning hidden" role="status"></p>
+              <button type="button" id="rankEvalBtn" class="btn secondary">Rank re-evaluation</button>
+            </div>
+          </article>
+
+          <article class="panel rank-ladder-panel">
+            <div class="panel-head">
+              <h3>Rank ladder</h3>
+            </div>
+            <p class="muted rank-ladder-intro">
+              Baseline evaluation assigns hunter ranks <strong>E–S</strong> only. National Level and above require rank missions and re-evaluation.
+            </p>
+            <div id="rankLadderTabs" class="rank-tabs" role="tablist" aria-label="Rank ladder categories"></div>
+            <div id="rankLadder" class="rank-ladder"></div>
+          </article>
+
+          <article id="questPanel" class="panel quest-panel">
+            <div class="panel-head">
+              <h3 id="questPanelTitle">Daily Quest</h3>
+            </div>
+            <div id="missionQuestBlock" class="mission-quest-block hidden">
+              <p class="label">RANK MISSION QUEST</p>
+              <p id="missionQuestTitle" class="mission-quest-title"></p>
+              <ul id="missionQuestTasks" class="quest-list quest-list--interactive"></ul>
+              <p id="missionQuestRewards" class="muted"></p>
+              <button type="button" id="completeMissionQuestBtn" class="btn">Complete mission quest</button>
+              <p id="missionQuestProgressHint" class="muted quest-progress-hint"></p>
+            </div>
+            <p id="questDoubleBadge" class="quest-double-badge hidden">Double volume — A-rank mission (200 / 200 / 200 reps · 10 km run)</p>
+            <p id="questDate" class="muted"></p>
+            <ul id="questTasks" class="quest-list quest-list--interactive"></ul>
+            <div class="quest-reward">
+              <p id="questRewards"></p>
+              <p id="penaltyWarning" class="warning hidden">
+                Miss the daily quest and the System applies a penalty: streak reset, XP loss, all stats −1, and extra penalty
+                reps the next day.
+              </p>
+            </div>
+            <button id="completeQuestBtn" class="btn">Complete daily quest</button>
+            <p id="questProgressHint" class="muted quest-progress-hint"></p>
+          </article>
+
+          <article class="panel rank-missions-panel">
+            <div class="panel-head">
+              <h3>Rank missions</h3>
+            </div>
+            <p class="muted rank-missions-intro">
+              Complete <strong>both</strong> missions for your current rank before re-evaluation. Missions only progress while you hold that rank.
+            </p>
+            <div id="rankMissionsTabs" class="rank-tabs" role="tablist" aria-label="Rank mission categories"></div>
+            <ul id="rankMissionsList" class="rank-missions-list"></ul>
+          </article>
+        </section>
+
+        <section id="progressTab" class="grid hidden tab-panel">
+          <article class="panel weight-panel">
+            <h3>Weight Tracker</h3>
+            <div class="form-row">
+              <label for="weightInput">Weight (kg)</label>
+              <input id="weightInput" type="number" min="1" step="0.1" placeholder="e.g. 82.4" />
+            </div>
+            <button id="logWeightBtn" class="btn">Log Weight</button>
+            <p id="weightLatest" class="muted"></p>
+          </article>
+
+          <article class="panel chart-panel">
+            <h3>Progress Graph</h3>
+            <canvas id="weightChart" width="800" height="280"></canvas>
+          </article>
+
+          <article class="panel history-panel">
+            <h3>Weight History</h3>
+            <ul id="weightHistory" class="history-list"></ul>
+          </article>
+        </section>
+
+        <section id="workoutsTab" class="grid hidden tab-panel">
+          <article class="panel workout-summary-panel">
+            <h3>Totals (all time)</h3>
+            <p id="autoWorkoutNote" class="muted auto-workout-note">
+              Workouts are logged automatically when you tap <strong>Complete daily quest</strong> on the System tab.
+            </p>
+            <div class="totals-grid">
+              <div class="total-chip"><span id="totalPushLabel">Push-ups</span><strong id="totalPushups">0</strong></div>
+              <div class="total-chip"><span id="totalSitLabel">Sit-ups</span><strong id="totalSitups">0</strong></div>
+              <div class="total-chip"><span id="totalSquatLabel">Squats</span><strong id="totalSquats">0</strong></div>
+              <div class="total-chip"><span>Running</span><strong id="totalRunning">0 km</strong></div>
+            </div>
+          </article>
+
+          <article class="panel history-panel workout-history-panel">
+            <h3>Workout history</h3>
+            <ul id="workoutHistoryList" class="history-list"></ul>
+          </article>
+        </section>
+
+        <section id="achievementsTab" class="grid hidden tab-panel">
+          <article class="panel achievements-detail-panel">
+            <h3>Achievements</h3>
+            <p class="muted">Progress toward each goal. 100% unlocks the achievement.</p>
+            <ul id="achievementProgressList" class="achievement-progress-list"></ul>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <nav id="bottomNav" class="bottom-nav hidden" aria-label="Main sections">
+      <button type="button" id="navSystemBtn" class="bottom-nav__btn active" data-tab="system">
+        <span class="bottom-nav__icon" aria-hidden="true">⌁</span>
+        <span class="bottom-nav__label">System</span>
+      </button>
+      <button type="button" id="navProgressBtn" class="bottom-nav__btn" data-tab="progress">
+        <span class="bottom-nav__icon" aria-hidden="true">◎</span>
+        <span class="bottom-nav__label">Progress</span>
+      </button>
+      <button type="button" id="navWorkoutsBtn" class="bottom-nav__btn" data-tab="workouts">
+        <span class="bottom-nav__icon" aria-hidden="true">▶</span>
+        <span class="bottom-nav__label">Workouts</span>
+      </button>
+      <button type="button" id="navAchievementsBtn" class="bottom-nav__btn" data-tab="achievements">
+        <span class="bottom-nav__icon" aria-hidden="true">★</span>
+        <span class="bottom-nav__label">Awards</span>
+      </button>
+    </nav>
+
+    <div id="systemModal" class="modal hidden">
+      <div class="modal-card">
+        <p class="label">SYSTEM MESSAGE</p>
+        <h3 id="modalTitle"></h3>
+        <p id="modalBody"></p>
+        <button id="closeModalBtn" class="btn">Acknowledge</button>
+      </div>
+    </div>
+
+    <div id="rankEvalModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card modal-card--form">
+        <p class="label">RANK RE-EVALUATION</p>
+        <h3>Physical screening</h3>
+        <p class="muted rank-eval-modal-desc">
+          Enter your max reps in <strong>one set</strong>. Promotion requires your <strong>level</strong>, those reps, completed
+          <strong>rank missions</strong>, and (for <strong>B → A</strong> and <strong>A → S</strong>) at least <strong>10 km</strong> in
+          one run session. <strong>National Level</strong> and above cannot be earned from baseline evaluation — only through missions
+          and re-evaluation.
+        </p>
+        <div class="form-row">
+          <label id="evalModalPushLabel" for="evalModalPush">Push-ups</label>
+          <input id="evalModalPush" type="number" min="0" step="1" />
+        </div>
+        <div class="form-row">
+          <label id="evalModalSitLabel" for="evalModalSit">Sit-ups</label>
+          <input id="evalModalSit" type="number" min="0" step="1" />
+        </div>
+        <div class="form-row">
+          <label id="evalModalSqLabel" for="evalModalSq">Squats</label>
+          <input id="evalModalSq" type="number" min="0" step="1" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="rankEvalCancelBtn" class="btn secondary">Cancel</button>
+          <button type="button" id="rankEvalSubmitBtn" class="btn">Submit evaluation</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
