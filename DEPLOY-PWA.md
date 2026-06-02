@@ -11,11 +11,12 @@ SoloFit runs as an **offline PWA**: your friend opens a link once, adds it to th
 ## Deploy on Netlify (easiest)
 
 1. Sign in at [app.netlify.com](https://app.netlify.com).
-2. **Add new site** → **Deploy manually** (drag & drop) **or** connect your GitHub repo.
-3. Publish the **project root** folder (where `index.html`, `app.js`, `sw.js`, and `manifest.webmanifest` live).
-   - Do **not** deploy only `www/` unless you ran `npm run build:web` and copied PWA files there too.
-4. Netlify uses `netlify.toml` in this repo (publish directory = `.`).
+2. **Add new site** → connect **GitHub** (recommended) **or** drag & drop the **`www`** folder.
+3. Before deploy, run locally: `npm run build:web`  
+   This copies assets to `www/` and builds **`apple-touch-icon.png` from `icon.svg`** (iPhone ignores SVG on the home screen).
+4. `netlify.toml` runs `node prepare-web.mjs` and publishes **`www/`** on Git builds.
 5. Copy your site URL, e.g. `https://your-name.netlify.app`.
+6. After an icon change: redeploy, then on iPhone **delete** the old home screen icon and **Add to Home Screen** again.
 
 ## Friend installs on iPhone
 

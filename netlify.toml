@@ -1,10 +1,20 @@
-# Deploy the project root (not www/) — SoloFit PWA
+# Runs prepare-web: copies assets to www/ and builds apple-touch-icon.png from icon.svg
 [build]
-  publish = "."
-  command = "echo 'Static PWA — no build step'"
+  publish = "www"
+  command = "node prepare-web.mjs"
 
 [[headers]]
   for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/icon.svg"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/apple-touch-icon.png"
   [headers.values]
     Cache-Control = "no-cache"
 

@@ -2,8 +2,15 @@
  * SoloFit offline shell — cache-first for app assets.
  * Bump CACHE_VERSION when you change app.js, styles.css, or index.html.
  */
-const CACHE_VERSION = "solofit-v2";
-const SHELL_ASSETS = ["index.html", "app.js", "styles.css", "icon.svg", "manifest.webmanifest"];
+const CACHE_VERSION = "solofit-v3";
+const SHELL_ASSETS = [
+  "index.html",
+  "app.js",
+  "styles.css",
+  "icon.svg",
+  "apple-touch-icon.png",
+  "manifest.webmanifest",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

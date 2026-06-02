@@ -5,6 +5,7 @@
   "description": "Solo Leveling inspired fitness PWA — offline on iPhone via Add to Home Screen.",
   "scripts": {
     "build:web": "node prepare-web.mjs",
+    "predeploy": "node prepare-web.mjs",
     "serve": "npx --yes serve . -l 3000",
     "cap:add:ios": "npx cap add ios",
     "cap:sync": "npm run build:web && npx cap sync ios",
